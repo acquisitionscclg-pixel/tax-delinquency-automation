@@ -1,0 +1,5 @@
+# Configuration for County Delinquent Tax Automation
+folder_name: "County Delinquent Tax Audit"
+share_email: "acquisitions.cclg@gmail.com"
+states: ["TN","GA","KY","FL","AL","ME","OH","MI","WI"]
+polite_delay_seconds: 1
