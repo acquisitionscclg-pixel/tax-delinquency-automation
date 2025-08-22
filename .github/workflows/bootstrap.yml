@@ -27,6 +27,5 @@ jobs:
           python scripts/bootstrap_drive_and_sheet.py
 
       - name: Slack notification (if configured)
-        if: secrets.SLACK_WEBHOOK_URL != ''
         run: |
           curl -X POST -H 'Content-type: application/json'           --data '{"text":"Bootstrap workflow completed successfully!"}'           ${{ secrets.SLACK_WEBHOOK_URL }}
