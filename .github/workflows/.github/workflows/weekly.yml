@@ -1,0 +1,35 @@
+name: Weekly County Scan
+
+on:
+  schedule:
+    - cron: '0 8 * * 0'  # Runs weekly on Sunday at 08:00 UTC
+  workflow_dispatch:
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt || true
+
+      - name: Run weekly scraper
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          SHEET_ID: ${{ secrets.SHEET_ID }}
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+        run: |
+          python scripts/weekly_runner.py
+
+      - name: Slack notification (if configured)
+        if: secrets.SLACK_WEBHOOK_URL != ''
+        run: |
+          curl -X POST -H 'Content-type: application/json'           --data '{"text":"Weekly county scan completed!"}'           ${{ secrets.SLACK_WEBHOOK_URL }}
